@@ -63,7 +63,7 @@ export function Reviews() {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: '-60px' }}
+            viewport={{ once: true, amount: 0.2 }}
             transition={{ duration: 0.6 }}
             className="text-center mb-12"
           >
@@ -84,11 +84,52 @@ export function Reviews() {
           <motion.div
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
-            viewport={{ once: true, margin: '-60px' }}
+            viewport={{ once: true, amount: 0.1 }}
             className="overflow-hidden"
           >
+            {/* Mobile carousel (faster) */}
             <motion.div
-              className="flex gap-6 px-6 md:px-12"
+              className="flex gap-6 px-6 md:px-12 md:hidden"
+              animate={{ x: ['0%', '-50%'] }}
+              transition={{
+                repeat: Infinity,
+                repeatType: 'loop',
+                duration: 16,
+                ease: 'linear',
+              }}
+            >
+              {[...reviews, ...reviews].map((review, i) => (
+                <div
+                  key={i}
+                  className="shrink-0 w-[320px] h-[220px] flex flex-col justify-between p-6 rounded-2xl bg-white/5 border-2 border-primary/30 hover:border-accent/50 hover:bg-white/10 transition-all"
+                >
+                  <div>
+                    <div className="flex gap-1 mb-3">
+                      {Array.from({ length: review.rating }).map((_, j) => (
+                        <span key={j} className="text-accent text-xl">
+                          ★
+                        </span>
+                      ))}
+                    </div>
+                    <p className="text-white/90 text-sm leading-relaxed mb-3">
+                      &ldquo;{review.text}&rdquo;
+                    </p>
+                  </div>
+                  <div className="flex items-baseline justify-between gap-3 mt-2 text-sm">
+                    <p className="font-bold text-accent">{review.name}</p>
+                    <p className="text-white/60 text-[11px] uppercase tracking-[0.18em]">
+                      {review.source === 'instagram' && 'Instagram'}
+                      {review.source === 'telegram' && 'Telegram'}
+                      {review.source === 'tiktok' && 'TikTok'}
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </motion.div>
+
+            {/* Desktop / tablet carousel (slower) */}
+            <motion.div
+              className="hidden md:flex gap-6 px-6 md:px-12"
               animate={{ x: ['0%', '-50%'] }}
               transition={{
                 repeat: Infinity,

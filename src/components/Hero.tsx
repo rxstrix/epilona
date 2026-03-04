@@ -45,6 +45,8 @@ export function Hero({ onCtaClick }: { onCtaClick: () => void }) {
         style={{
           background:
             'radial-gradient(ellipse 85% 55% at 18% 18%, rgba(211,103,244,0.42) 0%, rgba(136,77,216,0.0) 58%)',
+          willChange: 'opacity',
+          transform: 'translateZ(0)',
         }}
         animate={{ opacity: [0.35, 0.85, 0.35] }}
         transition={{ duration: 5.5, repeat: Infinity, ease: 'easeInOut' }}
@@ -54,40 +56,46 @@ export function Hero({ onCtaClick }: { onCtaClick: () => void }) {
         style={{
           background:
             'radial-gradient(ellipse 70% 45% at 82% 55%, rgba(136,77,216,0.4) 0%, rgba(211,103,244,0.0) 60%)',
+          willChange: 'opacity',
+          transform: 'translateZ(0)',
         }}
         animate={{ opacity: [0.3, 0.8, 0.3] }}
         transition={{ duration: 6.5, repeat: Infinity, ease: 'easeInOut' }}
       />
 
-      {/* Пульсирующие орбы с градиентом от розового к фиолетовому */}
-      <motion.div
-        className="absolute top-1/4 right-1/6 w-[420px] h-[420px] rounded-full blur-[120px] pointer-events-none"
-        style={{
-          background:
-            'radial-gradient(circle at 30% 30%, rgba(211,103,244,0.9) 0%, rgba(136,77,216,0.0) 70%)',
-        }}
-        animate={{
-          x: [0, 50, 10, 0],
-          y: [0, -35, -10, 0],
-          scale: [1, 1.14, 1.05, 1],
-          opacity: [0.45, 0.9, 0.6, 0.45],
-        }}
-        transition={{ duration: 11, repeat: Infinity, ease: 'easeInOut' }}
-      />
-      <motion.div
-        className="absolute bottom-[22%] left-[10%] w-[440px] h-[440px] rounded-full blur-[140px] pointer-events-none"
-        style={{
-          background:
-            'radial-gradient(circle at 60% 40%, rgba(136,77,216,0.75) 0%, rgba(211,103,244,0.0) 75%)',
-        }}
-        animate={{
-          x: [0, -24, 0],
-          y: [0, 18, 6, 0],
-          scale: [1.03, 1.12, 1.05, 1.03],
-          opacity: [0.3, 0.65, 0.4, 0.3],
-        }}
-        transition={{ duration: 11.5, repeat: Infinity, ease: 'easeInOut' }}
-      />
+      {/* Пульсирующие орбы — обёртка для стабильного GPU-слоя */}
+      <div className="absolute inset-0 pointer-events-none" style={{ transform: 'translateZ(0)' }}>
+        <motion.div
+          className="absolute top-1/4 right-1/6 w-[420px] h-[420px] rounded-full blur-[120px]"
+          style={{
+            background:
+              'radial-gradient(circle at 30% 30%, rgba(211,103,244,0.9) 0%, rgba(136,77,216,0.0) 70%)',
+            willChange: 'transform, opacity',
+          }}
+          animate={{
+            x: [0, 50, 10, 0],
+            y: [0, -35, -10, 0],
+            scale: [1, 1.14, 1.05, 1],
+            opacity: [0.45, 0.9, 0.6, 0.45],
+          }}
+          transition={{ duration: 11, repeat: Infinity, ease: 'easeInOut' }}
+        />
+        <motion.div
+          className="absolute bottom-[22%] left-[10%] w-[440px] h-[440px] rounded-full blur-[140px]"
+          style={{
+            background:
+              'radial-gradient(circle at 60% 40%, rgba(136,77,216,0.75) 0%, rgba(211,103,244,0.0) 75%)',
+            willChange: 'transform, opacity',
+          }}
+          animate={{
+            x: [0, -24, 0],
+            y: [0, 18, 6, 0],
+            scale: [1.03, 1.12, 1.05, 1.03],
+            opacity: [0.3, 0.65, 0.4, 0.3],
+          }}
+          transition={{ duration: 11.5, repeat: Infinity, ease: 'easeInOut' }}
+        />
+      </div>
       <div className="relative max-w-5xl mx-auto px-6 py-20 z-10">
         <motion.div
           variants={container}
@@ -117,18 +125,18 @@ export function Hero({ onCtaClick }: { onCtaClick: () => void }) {
 
           <motion.div
             variants={item}
-            className="flex flex-wrap justify-center gap-6 mb-14"
+            className="flex flex-col md:flex-row flex-wrap justify-center items-center gap-4 md:gap-6 mb-14"
           >
             {trustItems.map(({ icon: Icon, text }, i) => (
               <motion.div
                 key={i}
-                className="flex items-center gap-2 text-white/90"
+                className="flex items-center justify-center gap-2.5 text-white/90 w-full md:w-auto max-w-sm md:max-w-none"
                 whileHover={{ scale: 1.05, color: 'rgba(255,255,255,1)' }}
               >
-                <div className="p-2 rounded-lg bg-white/5">
+                <div className="shrink-0 p-2 rounded-lg bg-white/5 flex items-center justify-center w-9 h-9">
                   <Icon className="w-4 h-4 text-accent" />
                 </div>
-                <span className="text-sm font-medium">{text}</span>
+                <span className="text-sm font-medium leading-snug text-center md:text-left">{text}</span>
               </motion.div>
             ))}
           </motion.div>

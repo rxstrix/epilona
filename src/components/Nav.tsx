@@ -7,8 +7,11 @@ const navLinks = [
   { label: 'О нас', id: 'about' },
 ]
 
+const SCROLL_THRESHOLD = 80
+
 export function Nav() {
   const [activeSection, setActiveSection] = useState<string | null>(null)
+  const [scrolled, setScrolled] = useState(false)
   const [pillStyle, setPillStyle] = useState({ left: 0, width: 0, opacity: 0 })
   const navContainerRef = useRef<HTMLDivElement>(null)
 
@@ -18,6 +21,7 @@ export function Nav() {
 
   useEffect(() => {
     const handleScroll = () => {
+      setScrolled(window.scrollY > SCROLL_THRESHOLD)
       const trigger = 200
       const sections = navLinks
         .map((l) => ({
@@ -74,9 +78,24 @@ export function Nav() {
     return () => window.removeEventListener('resize', handler)
   }, [activeSection])
 
+  const glassStyle = {
+    background: 'linear-gradient(135deg, rgba(136, 77, 216, 0.2) 0%, rgba(210, 103, 244, 0.15) 100%)',
+    backdropFilter: 'blur(16px)',
+    WebkitBackdropFilter: 'blur(16px)',
+    borderBottom: '1px solid rgba(255, 255, 255, 0.2)',
+    boxShadow: '0 4px 24px rgba(136, 77, 216, 0.15), inset 0 1px 0 rgba(255,255,255,0.08)',
+  }
+
   return (
     <nav className="fixed top-0 left-0 right-0 z-50">
-      <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
+      {/* Mobile: transparent at top, glass after scroll. Desktop: hidden (pill has its own glass). */}
+      <div
+        data-scrolled={scrolled}
+        className="absolute inset-0 pointer-events-none opacity-0 transition-opacity duration-300 data-[scrolled=true]:opacity-100 md:opacity-0"
+        style={glassStyle}
+        aria-hidden
+      />
+      <div className="relative max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
         {/* Логотип */}
         <span
           onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
