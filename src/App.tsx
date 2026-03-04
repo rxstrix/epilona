@@ -1,11 +1,9 @@
-import { lazy, Suspense } from 'react'
 import { HandHeart, ShieldCheck, Sparkles, Clock3 } from 'lucide-react'
 import { Nav } from './components/Nav'
 import { Hero } from './components/Hero'
-
-const Services = lazy(() => import('./components/Services').then(m => ({ default: m.Services })))
-const Prices = lazy(() => import('./components/Prices').then(m => ({ default: m.Prices })))
-const Reviews = lazy(() => import('./components/Reviews').then(m => ({ default: m.Reviews })))
+import { Services } from './components/Services'
+import { Prices } from './components/Prices'
+import { Reviews } from './components/Reviews'
 
 const socialLinks = [
   { name: 'Telegram', href: 'https://t.me/epilona', icon: '✈️' },
@@ -23,11 +21,9 @@ function App() {
       <main>
         <Hero onCtaClick={() => scrollTo('contacts')} />
 
-        <Suspense fallback={<section className="min-h-[40vh]" aria-hidden />}>
-          <Services />
-          <Prices />
-          <Reviews />
-        </Suspense>
+        <Services />
+        <Prices />
+        <Reviews />
 
       {/* About */}
       <section id="about" className="py-24 relative overflow-hidden bg-dark" aria-labelledby="about-heading">
@@ -209,7 +205,7 @@ function App() {
           </div>
         </div>
       </footer>
-      </main>
+    </main>
     </div>
   )
 }

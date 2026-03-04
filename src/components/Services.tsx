@@ -1,4 +1,4 @@
-import { useInView } from '../hooks/useInView'
+import { motion } from 'framer-motion'
 import {
   FileText,
   Flower2,
@@ -64,17 +64,35 @@ const services = [
   },
 ]
 
-export function Services() {
-  const [sectionRef, sectionInView] = useInView({ threshold: 0.12 })
-  const [cardsRef, cardsInView] = useInView({ threshold: 0.1 })
+const container = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: { staggerChildren: 0.1, delayChildren: 0.15 },
+  },
+}
 
+const cardItem = {
+  hidden: { opacity: 0, y: 24 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.5, ease: [0.25, 0.46, 0.45, 0.94] },
+  },
+}
+
+export function Services() {
   return (
     <section id="services" className="py-24 relative overflow-hidden bg-dark" aria-labelledby="services-heading">
-      <div className="absolute inset-0 bg-[#090315]" aria-hidden />
+      <div className="absolute inset-0 bg-[#090315]" />
+
       <div className="relative max-w-[1600px] mx-auto px-8 lg:px-12 z-10">
-        <div
-          ref={sectionRef}
-          className={`reveal-root text-center mb-16 ${sectionInView ? 'in-view' : ''}`}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.2 }}
+          transition={{ duration: 0.6 }}
+          className="text-center mb-16"
         >
           <h2 id="services-heading" className="text-4xl md:text-5xl font-extrabold mb-4 text-white drop-shadow-lg">
             Наши услуги
@@ -82,11 +100,14 @@ export function Services() {
           <p className="text-accent font-semibold text-lg max-w-2xl mx-auto">
             Четыре варианта. Полный комплект в каждой услуге
           </p>
-        </div>
+        </motion.div>
 
-        <div
-          ref={cardsRef}
-          className={`reveal-root grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-8 ${cardsInView ? 'in-view' : ''}`}
+        <motion.div
+          variants={container}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.15 }}
+          className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-8"
         >
           {services.map((service) => {
             const Icon = service.icon
@@ -94,9 +115,11 @@ export function Services() {
             const isFreeConsultation = service.id === 'consultation'
 
             return (
-              <div
+              <motion.div
                 key={service.id}
-                className={`reveal-card relative flex flex-col p-8 rounded-2xl border-2 transition-all min-w-0 hover:-translate-y-1.5 ${
+                variants={cardItem}
+                whileHover={{ y: -6 }}
+                className={`relative flex flex-col p-8 rounded-2xl border-2 transition-all min-w-0 ${
                   isBestseller
                     ? 'bg-white/5 border-accent/60'
                     : 'bg-white/5 border-primary/30 hover:border-primary/50'
@@ -175,10 +198,10 @@ export function Services() {
                 >
                   Выбрать этот пакет
                 </button>
-              </div>
+              </motion.div>
             )
           })}
-        </div>
+        </motion.div>
       </div>
     </section>
   )

@@ -1,4 +1,4 @@
-import { useInView } from '../hooks/useInView'
+import { motion } from 'framer-motion'
 
 type Review = {
   name: string
@@ -17,42 +17,19 @@ const reviews: Review[] = [
   { name: 'Светлана', text: 'Брала курс на ноги полностью. Спустя несколько месяцев кожа гладкая, остались только единичные пушковые волоски.', rating: 5, source: 'instagram' },
 ]
 
-function ReviewCard({ review }: { review: Review }) {
-  return (
-    <div className="shrink-0 w-[320px] md:w-[400px] h-[220px] flex flex-col justify-between p-6 rounded-2xl bg-white/5 border-2 border-primary/30 hover:border-accent/50 hover:bg-white/10 transition-all">
-      <div>
-        <div className="flex gap-1 mb-3">
-          {Array.from({ length: review.rating }).map((_, j) => (
-            <span key={j} className="text-accent text-xl" aria-hidden>★</span>
-          ))}
-        </div>
-        <p className="text-white/90 text-sm leading-relaxed mb-3">
-          &ldquo;{review.text}&rdquo;
-        </p>
-      </div>
-      <div className="flex items-baseline justify-between gap-3 mt-2 text-sm">
-        <p className="font-bold text-accent">{review.name}</p>
-        <p className="text-white/60 text-[11px] uppercase tracking-[0.18em]">
-          {review.source === 'instagram' && 'Instagram'}
-          {review.source === 'telegram' && 'Telegram'}
-          {review.source === 'tiktok' && 'TikTok'}
-        </p>
-      </div>
-    </div>
-  )
-}
-
 export function Reviews() {
-  const [ref, inView] = useInView({ threshold: 0.15 })
-
   return (
     <section id="reviews" className="py-24 relative overflow-hidden bg-dark" aria-labelledby="reviews-heading">
-      <div className="absolute inset-0 bg-[#090315]" aria-hidden />
+      <div className="absolute inset-0 bg-[#090315]" />
+
       <div className="relative z-10">
         <div className="max-w-6xl mx-auto px-6">
-          <div
-            ref={ref}
-            className={`reveal-root text-center mb-12 ${inView ? 'in-view' : ''}`}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.2 }}
+            transition={{ duration: 0.6 }}
+            className="text-center mb-12"
           >
             <h2 id="reviews-heading" className="text-4xl md:text-5xl font-extrabold text-center mb-4 text-white">
               Отзывы клиенток
@@ -60,27 +37,93 @@ export function Reviews() {
             <p className="text-accent font-semibold text-center text-lg">
               Реальные истории девушек, которые выбрали электроэпиляцию
             </p>
-          </div>
+          </motion.div>
         </div>
 
-        <div className="relative w-full overflow-hidden">
-          <div className="pointer-events-none absolute inset-y-0 left-0 w-24 bg-gradient-to-r from-[#090315] to-transparent z-10" aria-hidden />
-          <div className="pointer-events-none absolute inset-y-0 right-0 w-24 bg-gradient-to-l from-[#090315] to-transparent z-10" aria-hidden />
+        <div className="relative w-full">
+          <div className="pointer-events-none absolute inset-y-0 left-0 w-24 bg-gradient-to-r from-[#090315] to-transparent" />
+          <div className="pointer-events-none absolute inset-y-0 right-0 w-24 bg-gradient-to-l from-[#090315] to-transparent" />
 
-          <div className="md:hidden">
-            <div className="flex gap-6 px-6 w-max reviews-track-mobile">
+          <motion.div
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true, amount: 0.1 }}
+            className="overflow-hidden"
+          >
+            <motion.div
+              className="flex gap-6 px-6 md:px-12 md:hidden"
+              animate={{ x: ['0%', '-50%'] }}
+              transition={{
+                repeat: Infinity,
+                repeatType: 'loop',
+                duration: 16,
+                ease: 'linear',
+              }}
+            >
               {[...reviews, ...reviews].map((review, i) => (
-                <ReviewCard key={i} review={review} />
+                <div
+                  key={i}
+                  className="shrink-0 w-[320px] h-[220px] flex flex-col justify-between p-6 rounded-2xl bg-white/5 border-2 border-primary/30 hover:border-accent/50 hover:bg-white/10 transition-all"
+                >
+                  <div>
+                    <div className="flex gap-1 mb-3">
+                      {Array.from({ length: review.rating }).map((_, j) => (
+                        <span key={j} className="text-accent text-xl">★</span>
+                      ))}
+                    </div>
+                    <p className="text-white/90 text-sm leading-relaxed mb-3">
+                      &ldquo;{review.text}&rdquo;
+                    </p>
+                  </div>
+                  <div className="flex items-baseline justify-between gap-3 mt-2 text-sm">
+                    <p className="font-bold text-accent">{review.name}</p>
+                    <p className="text-white/60 text-[11px] uppercase tracking-[0.18em]">
+                      {review.source === 'instagram' && 'Instagram'}
+                      {review.source === 'telegram' && 'Telegram'}
+                      {review.source === 'tiktok' && 'TikTok'}
+                    </p>
+                  </div>
+                </div>
               ))}
-            </div>
-          </div>
-          <div className="hidden md:block">
-            <div className="flex gap-6 px-6 md:px-12 w-max reviews-track-desktop">
+            </motion.div>
+
+            <motion.div
+              className="hidden md:flex gap-6 px-6 md:px-12"
+              animate={{ x: ['0%', '-50%'] }}
+              transition={{
+                repeat: Infinity,
+                repeatType: 'loop',
+                duration: 40,
+                ease: 'linear',
+              }}
+            >
               {[...reviews, ...reviews].map((review, i) => (
-                <ReviewCard key={i} review={review} />
+                <div
+                  key={i}
+                  className="shrink-0 w-[400px] h-[220px] flex flex-col justify-between p-6 rounded-2xl bg-white/5 border-2 border-primary/30 hover:border-accent/50 hover:bg-white/10 transition-all"
+                >
+                  <div>
+                    <div className="flex gap-1 mb-3">
+                      {Array.from({ length: review.rating }).map((_, j) => (
+                        <span key={j} className="text-accent text-xl">★</span>
+                      ))}
+                    </div>
+                    <p className="text-white/90 text-sm leading-relaxed mb-3">
+                      &ldquo;{review.text}&rdquo;
+                    </p>
+                  </div>
+                  <div className="flex items-baseline justify-between gap-3 mt-2 text-sm">
+                    <p className="font-bold text-accent">{review.name}</p>
+                    <p className="text-white/60 text-[11px] uppercase tracking-[0.18em]">
+                      {review.source === 'instagram' && 'Instagram'}
+                      {review.source === 'telegram' && 'Telegram'}
+                      {review.source === 'tiktok' && 'TikTok'}
+                    </p>
+                  </div>
+                </div>
               ))}
-            </div>
-          </div>
+            </motion.div>
+          </motion.div>
         </div>
       </div>
     </section>
