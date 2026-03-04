@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://rxstrix.github.io/epilona/sitemap.xml
