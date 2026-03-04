@@ -1,30 +1,30 @@
 import { motion } from 'framer-motion'
 import { Shield, Zap, Sparkles, ArrowRight } from 'lucide-react'
+import { useIsMobile } from '../hooks/useIsMobile'
 
 const trustItems = [
-  {
-    icon: Zap,
-    text: 'Точная работа с каждым фолликулом',
-  },
-  {
-    icon: Shield,
-    text: 'Стерильные одноразовые иглы и анестезия по показаниям',
-  },
-  {
-    icon: Sparkles,
-    text: 'Гладкость без жёсткой щетины и вросших волос',
-  },
+  { icon: Zap, text: 'Точная работа с каждым фолликулом' },
+  { icon: Shield, text: 'Стерильные одноразовые иглы и анестезия по показаниям' },
+  { icon: Sparkles, text: 'Гладкость без жёсткой щетины и вросших волос' },
 ]
 
-const container = {
+const containerDesktop = {
   hidden: { opacity: 0 },
-  visible: (i = 1) => ({
+  visible: {
     opacity: 1,
-    transition: { staggerChildren: 0.12, delayChildren: 0.2 * i },
-  }),
+    transition: { staggerChildren: 0.12, delayChildren: 0.2 },
+  },
 }
 
-const item = {
+const containerMobile = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: { staggerChildren: 0.05, delayChildren: 0.06 },
+  },
+}
+
+const itemDesktop = {
   hidden: { opacity: 0, y: 30 },
   visible: {
     opacity: 1,
@@ -33,41 +33,71 @@ const item = {
   },
 }
 
+const itemMobile = {
+  hidden: { opacity: 0, y: 20 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.4, ease: [0.25, 0.46, 0.45, 0.94] },
+  },
+}
+
 export function Hero({ onCtaClick }: { onCtaClick: () => void }) {
+  const isMobile = useIsMobile()
+  const container = isMobile ? containerMobile : containerDesktop
+  const item = isMobile ? itemMobile : itemDesktop
+
   return (
     <section className="min-h-screen flex flex-col justify-center relative overflow-hidden bg-dark" aria-label="Главный экран">
       <div className="absolute inset-0 bg-gradient-to-b from-[#07030f] via-[#05010b] to-[#090316]" />
 
+      {/* Animated gradient layers — desktop only (expensive on mobile) */}
       <motion.div
-        className="absolute inset-0"
+        className="absolute inset-0 hidden md:block"
         style={{
           background:
-            'radial-gradient(ellipse 85% 55% at 18% 18%, rgba(211,103,244,0.42) 0%, rgba(136,77,216,0.0) 58%)',
-          willChange: 'opacity',
+            'radial-gradient(ellipse 85% 55% at 18% 18%, rgba(211,103,244,0.42) 0%, rgba(136,77,216,0) 58%)',
           transform: 'translateZ(0)',
         }}
         animate={{ opacity: [0.35, 0.85, 0.35] }}
         transition={{ duration: 5.5, repeat: Infinity, ease: 'easeInOut' }}
       />
       <motion.div
-        className="absolute inset-0"
+        className="absolute inset-0 hidden md:block"
         style={{
           background:
-            'radial-gradient(ellipse 70% 45% at 82% 55%, rgba(136,77,216,0.4) 0%, rgba(211,103,244,0.0) 60%)',
-          willChange: 'opacity',
+            'radial-gradient(ellipse 70% 45% at 82% 55%, rgba(136,77,216,0.4) 0%, rgba(211,103,244,0) 60%)',
           transform: 'translateZ(0)',
         }}
         animate={{ opacity: [0.3, 0.8, 0.3] }}
         transition={{ duration: 6.5, repeat: Infinity, ease: 'easeInOut' }}
       />
 
-      <div className="absolute inset-0 pointer-events-none" style={{ transform: 'translateZ(0)' }}>
+      {/* Static gradient layers — mobile only (no animation = smooth) */}
+      <div
+        className="absolute inset-0 md:hidden"
+        style={{
+          background:
+            'radial-gradient(ellipse 85% 55% at 18% 18%, rgba(211,103,244,0.5) 0%, rgba(136,77,216,0) 58%)',
+        }}
+        aria-hidden
+      />
+      <div
+        className="absolute inset-0 md:hidden"
+        style={{
+          background:
+            'radial-gradient(ellipse 70% 45% at 82% 55%, rgba(136,77,216,0.45) 0%, rgba(211,103,244,0) 60%)',
+        }}
+        aria-hidden
+      />
+
+      {/* Animated orbs — desktop only (blur + transform = heavy on mobile) */}
+      <div className="absolute inset-0 pointer-events-none hidden md:block" style={{ transform: 'translateZ(0)' }}>
         <motion.div
           className="absolute top-1/4 right-1/6 w-[420px] h-[420px] rounded-full blur-[120px]"
           style={{
             background:
-              'radial-gradient(circle at 30% 30%, rgba(211,103,244,0.9) 0%, rgba(136,77,216,0.0) 70%)',
-            willChange: 'transform, opacity',
+              'radial-gradient(circle at 30% 30%, rgba(211,103,244,0.9) 0%, rgba(136,77,216,0) 70%)',
           }}
           animate={{
             x: [0, 50, 10, 0],
@@ -81,8 +111,7 @@ export function Hero({ onCtaClick }: { onCtaClick: () => void }) {
           className="absolute bottom-[22%] left-[10%] w-[440px] h-[440px] rounded-full blur-[140px]"
           style={{
             background:
-              'radial-gradient(circle at 60% 40%, rgba(136,77,216,0.75) 0%, rgba(211,103,244,0.0) 75%)',
-            willChange: 'transform, opacity',
+              'radial-gradient(circle at 60% 40%, rgba(136,77,216,0.75) 0%, rgba(211,103,244,0) 75%)',
           }}
           animate={{
             x: [0, -24, 0],
@@ -93,6 +122,25 @@ export function Hero({ onCtaClick }: { onCtaClick: () => void }) {
           transition={{ duration: 11.5, repeat: Infinity, ease: 'easeInOut' }}
         />
       </div>
+
+      {/* Static orbs — mobile only */}
+      <div className="absolute inset-0 pointer-events-none md:hidden" aria-hidden>
+        <div
+          className="absolute top-1/4 right-1/6 w-[280px] h-[280px] rounded-full blur-[80px] opacity-60"
+          style={{
+            background:
+              'radial-gradient(circle at 30% 30%, rgba(211,103,244,0.9) 0%, rgba(136,77,216,0) 70%)',
+          }}
+        />
+        <div
+          className="absolute bottom-[22%] left-[10%] w-[300px] h-[300px] rounded-full blur-[90px] opacity-50"
+          style={{
+            background:
+              'radial-gradient(circle at 60% 40%, rgba(136,77,216,0.75) 0%, rgba(211,103,244,0) 75%)',
+          }}
+        />
+      </div>
+
       <div className="relative max-w-5xl mx-auto px-6 py-20 z-10">
         <motion.div
           variants={container}
@@ -128,7 +176,7 @@ export function Hero({ onCtaClick }: { onCtaClick: () => void }) {
               <motion.div
                 key={i}
                 className="flex items-center justify-center gap-2.5 text-white/90 w-full md:w-auto max-w-sm md:max-w-none"
-                whileHover={{ scale: 1.05, color: 'rgba(255,255,255,1)' }}
+                whileHover={{ scale: 1.05 }}
               >
                 <div className="shrink-0 p-2 rounded-lg bg-white/5 flex items-center justify-center w-9 h-9">
                   <Icon className="w-4 h-4 text-accent" />

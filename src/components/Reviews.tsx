@@ -27,8 +27,8 @@ export function Reviews() {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.2 }}
-            transition={{ duration: 0.6 }}
+            viewport={{ once: true, amount: 0.25, margin: '0px 0px 50px 0px' }}
+            transition={{ duration: 0.5, ease: [0.25, 0.46, 0.45, 0.94] }}
             className="text-center mb-12"
           >
             <h2 id="reviews-heading" className="text-4xl md:text-5xl font-extrabold text-center mb-4 text-white">
@@ -47,7 +47,8 @@ export function Reviews() {
           <motion.div
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
-            viewport={{ once: true, amount: 0.1 }}
+            viewport={{ once: true, amount: 0.15, margin: '0px 0px 60px 0px' }}
+            transition={{ duration: 0.4 }}
             className="overflow-hidden"
           >
             <motion.div
