@@ -10,9 +10,12 @@ export function useInView(options?: { threshold?: number; rootMargin?: string })
     if (!el) return
     const obs = new IntersectionObserver(
       ([entry]) => {
-        if (entry?.isIntersecting) setInView(true)
+        if (entry?.isIntersecting) {
+          setInView(true)
+          obs.disconnect()
+        }
       },
-      { threshold: options?.threshold ?? 0.15, rootMargin: options?.rootMargin ?? '0px', once: true }
+      { threshold: options?.threshold ?? 0.15, rootMargin: options?.rootMargin ?? '0px' }
     )
     obs.observe(el)
     return () => obs.disconnect()
