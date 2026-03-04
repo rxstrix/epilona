@@ -14,11 +14,110 @@ body {
   min-height: 100%;
 }
 
+/* ----- Scroll reveal (no Framer, no flicker) ----- */
+/* Off-screen sections: browser can skip work until near viewport */
+section {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 600px;
+}
+
+.reveal-root {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+}
+.reveal-root.in-view {
+  opacity: 1;
+  transform: translateY(0);
+}
+.reveal-card {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.45s ease-out, transform 0.45s ease-out;
+}
+.reveal-root.in-view .reveal-card {
+  opacity: 1;
+  transform: translateY(0);
+}
+.reveal-root.in-view .reveal-card:nth-child(1) { transition-delay: 0.05s; }
+.reveal-root.in-view .reveal-card:nth-child(2) { transition-delay: 0.12s; }
+.reveal-root.in-view .reveal-card:nth-child(3) { transition-delay: 0.19s; }
+.reveal-root.in-view .reveal-card:nth-child(4) { transition-delay: 0.26s; }
+.reveal-root.in-view .reveal-card:nth-child(5) { transition-delay: 0.33s; }
+.reveal-root.in-view .reveal-card:nth-child(6) { transition-delay: 0.4s; }
+.reveal-root.in-view .reveal-card:nth-child(7) { transition-delay: 0.47s; }
+.reveal-root.in-view .reveal-card:nth-child(8) { transition-delay: 0.54s; }
+
+/* ----- Hero: CSS-only background (no JS animation) ----- */
+@keyframes hero-glow-a {
+  0%, 100% { opacity: 0.35; }
+  50% { opacity: 0.85; }
+}
+@keyframes hero-glow-b {
+  0%, 100% { opacity: 0.3; }
+  50% { opacity: 0.8; }
+}
+@keyframes hero-orb-right {
+  0%, 100% { transform: translate(0, 0) scale(1); opacity: 0.45; }
+  33% { transform: translate(50px, -35px) scale(1.14); opacity: 0.9; }
+  66% { transform: translate(10px, -10px) scale(1.05); opacity: 0.6; }
+}
+@keyframes hero-orb-left {
+  0%, 100% { transform: translate(0, 0) scale(1.03); opacity: 0.3; }
+  33% { transform: translate(-24px, 18px) scale(1.12); opacity: 0.65; }
+  66% { transform: translate(0, 6px) scale(1.05); opacity: 0.4; }
+}
+.hero-bg-glow-a {
+  background: radial-gradient(ellipse 85% 55% at 18% 18%, rgba(211,103,244,0.42) 0%, rgba(136,77,216,0) 58%);
+  animation: hero-glow-a 5.5s ease-in-out infinite;
+}
+.hero-bg-glow-b {
+  background: radial-gradient(ellipse 70% 45% at 82% 55%, rgba(136,77,216,0.4) 0%, rgba(211,103,244,0) 60%);
+  animation: hero-glow-b 6.5s ease-in-out infinite;
+}
+.hero-orb-right {
+  background: radial-gradient(circle at 30% 30%, rgba(211,103,244,0.9) 0%, rgba(136,77,216,0) 70%);
+  animation: hero-orb-right 11s ease-in-out infinite;
+}
+.hero-orb-left {
+  background: radial-gradient(circle at 60% 40%, rgba(136,77,216,0.75) 0%, rgba(211,103,244,0) 75%);
+  animation: hero-orb-left 11.5s ease-in-out infinite;
+}
+
+/* ----- Hero content: one-time fade-up on load ----- */
+@keyframes hero-reveal {
+  from { opacity: 0; transform: translateY(24px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.hero-content > * {
+  animation: hero-reveal 0.6s ease-out backwards;
+}
+.hero-content > *:nth-child(1) { animation-delay: 0.1s; }
+.hero-content > *:nth-child(2) { animation-delay: 0.22s; }
+.hero-content > *:nth-child(3) { animation-delay: 0.34s; }
+.hero-content > *:nth-child(4) { animation-delay: 0.46s; }
+.hero-content > *:nth-child(5) { animation-delay: 0.58s; }
+.hero-content > *:nth-child(6) { animation-delay: 0.7s; }
+.hero-content > *:nth-child(7) { animation-delay: 0.82s; }
+.hero-content > *:nth-child(8) { animation-delay: 0.94s; }
+.hero-content > *:nth-child(9) { animation-delay: 1.06s; }
+.hero-content > *:nth-child(10) { animation-delay: 1.18s; }
+
+/* ----- Reviews carousel: CSS-only (no Framer) ----- */
+@keyframes reviews-scroll {
+  to { transform: translateX(-50%); }
+}
+.reviews-track-mobile {
+  animation: reviews-scroll 16s linear infinite;
+}
+.reviews-track-desktop {
+  animation: reviews-scroll 40s linear infinite;
+}
+
 @keyframes float {
   0%, 100% { transform: translateY(0) rotate(0deg); }
   50% { transform: translateY(-10px) rotate(2deg); }
 }
-
 .animate-float {
   animation: float 4s ease-in-out infinite;
 }

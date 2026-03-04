@@ -1,4 +1,4 @@
-import { useInView } from '../hooks/useInView'
+import { motion } from 'framer-motion'
 
 type ZonePrice = {
   label: string
@@ -12,6 +12,9 @@ type PricePlan = {
   zones: ZonePrice[]
 }
 
+// Базовые ставки взяты из секции услуг:
+// лицо — 35 BYN/час, тело — 40 BYN/час, интим — 45 BYN/час.
+// Для конкретных зон используем фиксированный шаг 2.5 BYN.
 const pricePlans: PricePlan[] = [
   {
     id: 'face',
@@ -54,33 +57,38 @@ const pricePlans: PricePlan[] = [
 ]
 
 export function Prices() {
-  const [headerRef, headerInView] = useInView({ threshold: 0.2 })
-  const [gridRef, gridInView] = useInView({ threshold: 0.15 })
-
   return (
-    <section id="prices" className="py-24 relative overflow-hidden bg-dark" aria-labelledby="prices-heading">
-      <div className="absolute inset-0 bg-[#090315]" aria-hidden />
+    <section id="prices" className="py-24 relative overflow-hidden bg-dark">
+      {/* Однородный фон в той же тёмной палитре, что и услуги */}
+      <div className="absolute inset-0 bg-[#090315]" />
+
       <div className="relative max-w-6xl mx-auto px-6 z-10">
-        <div
-          ref={headerRef}
-          className={`reveal-root text-center mb-16 ${headerInView ? 'in-view' : ''}`}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.2 }}
+          transition={{ duration: 0.6 }}
+          className="text-center mb-16"
         >
-          <h2 id="prices-heading" className="text-4xl md:text-5xl font-extrabold text-center mb-4 text-white">
+          <h2 className="text-4xl md:text-5xl font-extrabold text-center mb-4 text-white">
             Цены
           </h2>
           <p className="text-accent font-semibold text-center text-lg">
             Прозрачно. Первая консультация — бесплатно
           </p>
-        </div>
+        </motion.div>
 
-        <div
-          ref={gridRef}
-          className={`reveal-root grid gap-8 md:grid-cols-3 ${gridInView ? 'in-view' : ''}`}
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.15 }}
+          transition={{ duration: 0.6 }}
+          className="grid gap-8 md:grid-cols-3"
         >
           {pricePlans.map((plan) => (
             <PriceCard key={plan.id} plan={plan} />
           ))}
-        </div>
+        </motion.div>
       </div>
     </section>
   )
@@ -88,7 +96,7 @@ export function Prices() {
 
 function PriceCard({ plan }: { plan: PricePlan }) {
   return (
-    <div className="reveal-card flex flex-col h-full p-7 rounded-2xl bg-white/5 border-2 border-primary/30 hover:border-accent/60 hover:bg-white/10 transition-all">
+    <div className="flex flex-col h-full p-7 rounded-2xl bg-white/5 border-2 border-primary/30 hover:border-accent/60 hover:bg-white/10 transition-all">
       <div className="mb-5">
         <h3 className="font-bold text-2xl text-white mb-2">{plan.title}</h3>
         <p className="text-sm text-white/70">{plan.description}</p>
@@ -112,3 +120,4 @@ function PriceCard({ plan }: { plan: PricePlan }) {
     </div>
   )
 }
+

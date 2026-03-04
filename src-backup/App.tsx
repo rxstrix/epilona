@@ -1,11 +1,9 @@
-import { lazy, Suspense } from 'react'
 import { HandHeart, ShieldCheck, Sparkles, Clock3 } from 'lucide-react'
 import { Nav } from './components/Nav'
 import { Hero } from './components/Hero'
-
-const Services = lazy(() => import('./components/Services').then(m => ({ default: m.Services })))
-const Prices = lazy(() => import('./components/Prices').then(m => ({ default: m.Prices })))
-const Reviews = lazy(() => import('./components/Reviews').then(m => ({ default: m.Reviews })))
+import { Services } from './components/Services'
+import { Prices } from './components/Prices'
+import { Reviews } from './components/Reviews'
 
 const socialLinks = [
   { name: 'Telegram', href: 'https://t.me/epilona', icon: '✈️' },
@@ -20,22 +18,24 @@ function App() {
   return (
     <div className="min-h-screen bg-dark">
       <Nav />
-      <main>
-        <Hero onCtaClick={() => scrollTo('contacts')} />
 
-        <Suspense fallback={<section className="min-h-[40vh]" aria-hidden />}>
-          <Services />
-          <Prices />
-          <Reviews />
-        </Suspense>
+      <Hero onCtaClick={() => scrollTo('contacts')} />
+
+      <Services />
+
+      <Prices />
+
+      <Reviews />
 
       {/* About */}
-      <section id="about" className="py-24 relative overflow-hidden bg-dark" aria-labelledby="about-heading">
-        <div className="absolute inset-0 bg-[#090315]" aria-hidden />
+      <section id="about" className="py-24 relative overflow-hidden bg-dark">
+        {/* Однородный однотонный фон, как у соседних секций */}
+        <div className="absolute inset-0 bg-[#090315]" />
+
         <div className="relative max-w-6xl mx-auto px-6 z-10">
           <div className="grid md:grid-cols-[3fr,2fr] gap-16 items-center">
             <div>
-              <h2 id="about-heading" className="text-4xl md:text-5xl font-extrabold mb-6 text-white">
+              <h2 className="text-4xl md:text-5xl font-extrabold mb-6 text-white">
                 Почему выбирают <span className="text-accent">Epilona</span>?
               </h2>
               <p className="text-white/80 text-lg mb-6">
@@ -85,12 +85,14 @@ function App() {
       </section>
 
       {/* Contacts */}
-      <section id="contacts" className="py-24 relative overflow-hidden bg-dark" aria-labelledby="contacts-heading">
-        <div className="absolute inset-0 bg-[#090315]" aria-hidden />
+      <section id="contacts" className="py-24 relative overflow-hidden bg-dark">
+        {/* Однородный фон в единой палитре */}
+        <div className="absolute inset-0 bg-[#090315]" />
+
         <div className="relative max-w-5xl mx-auto px-6">
           <div className="grid md:grid-cols-2 gap-12 items-center">
             <div>
-              <h2 id="contacts-heading" className="text-4xl md:text-5xl font-extrabold mb-4 text-white">
+              <h2 className="text-4xl md:text-5xl font-extrabold mb-4 text-white">
                 Записаться на приём
               </h2>
               <p className="text-white/85 text-lg mb-6">
@@ -209,7 +211,6 @@ function App() {
           </div>
         </div>
       </footer>
-      </main>
     </div>
   )
 }
